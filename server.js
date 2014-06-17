@@ -19,6 +19,12 @@ app.get('/api/people', function (req, res) {
   res.json({people: _.values(people)});
 });
 
+app.get(/^\/api\/people\/(\d+)$/, function (req, res) {
+  console.log(req.params[0]);
+  var id = req.params[0];
+  res.json({person: people[id]});
+});
+
 app.post('/api/people', function(req, res) {
   var id = people.length + 1;
   var person = {
