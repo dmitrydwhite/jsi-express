@@ -20,7 +20,6 @@ app.get('/api/people', function (req, res) {
 });
 
 app.get(/^\/api\/people\/(\d+)$/, function (req, res) {
-  console.log(req.params[0]);
   var id = req.params[0];
   res.json({person: people[id]});
 });
@@ -33,6 +32,12 @@ app.post('/api/people', function(req, res) {
   };
   people[id] = person;
   res.json({ person: person });
+});
+
+app.put(/^\/api\/people\/(\d+)$/, function (req, res) {
+  var id = req.params[0];
+  people[id] = {id: id, name: req.param('name')};
+  res.json({person: people[id]});
 });
 
 var server = app.listen(process.env.PORT || 3000, function() {
