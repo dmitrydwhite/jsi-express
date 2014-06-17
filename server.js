@@ -15,6 +15,24 @@ var people = {
   4: { id: 4, name: 'Grant' }
 };
 
+var idCache = _.keys(people);
+
+var findUniqueKey = function (array) {
+  var nextUnique = 1;
+
+  var iterate = function (array) {
+    if (array.indexOf(nextUnique.toString()) !== -1) {
+      nextUnique += 1;
+      iterate(array);
+    }
+    else {return nextUnique;}
+  };
+
+  iterate(array);
+  idCache.push(nextUnique.toString());
+  return nextUnique;
+};
+
 app.get('/api/people', function (req, res) {
   res.json({people: _.values(people)});
 });
@@ -24,10 +42,10 @@ app.get(/^\/api\/people\/(\d+)$/, function (req, res) {
   res.json({person: people[id]});
 });
 
-app.post('/api/people', function(req, res) {
-  var id = people.length + 1;
+app.post('/api/people', function (req, res) {
+  var id = findUniqueKey(idCache);
   var person = {
-    id: 1,
+    id: id,
     name: req.param('name')
   };
   people[id] = person;
