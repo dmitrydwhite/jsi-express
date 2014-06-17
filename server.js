@@ -40,6 +40,12 @@ app.put(/^\/api\/people\/(\d+)$/, function (req, res) {
   res.json({person: people[id]});
 });
 
+app.delete(/^\/api\/people\/(\d+)$/, function (req, res) {
+  var id = req.params[0];
+  delete people[id];
+  res.json({people: _.values(people)});
+});
+
 var server = app.listen(process.env.PORT || 3000, function() {
   console.log('Listening on port %d', server.address().port);
 });
