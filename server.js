@@ -12,24 +12,31 @@ app.use(require('body-parser')());
 app.use(require('method-override')());
 app.use(express.static(__dirname + '/public'));
 
-
-app.get('/api/people', function (req, res) {
-  res.json({people: _.values(people)});
+var People = bookshelf.Model.extend({
+  tableName: 'people'
 });
 
-app.get(/^\/api\/people\/(\d+)$/, function (req, res) {
-  var id = req.params[0];
-  res.json({person: people[id]});
+app.get('/api/people', function (req, res) {
+  People.fetchAll().then(function(result) {
+    res.json({people: result.toJSON()});
+  })
+  .done();
+});
+
+app.get('/api/people/:id', function (req, res) {
+  People.where({id: req.params.id}).fetchAll().then(function(result) {
+    res.json({person: result.toJSON()});
+  })
+  .done();
 });
 
 app.post('/api/people', function (req, res) {
-  var id = findUniqueKey(idCache);
-  var person = {
-    id: id,
-    name: req.param('name')
-  };
-  people[id] = person;
-  res.json({ person: person });
+  People.forge({firstName: req.param('firstName'),
+    lastName: req.param('lastName'), address: req.param('address')})
+    .save().then(function(result) {
+      res.json({created: result.toJSON()})
+    })
+    .done();
 });
 
 app.put(/^\/api\/people\/(\d+)$/, function (req, res) {
