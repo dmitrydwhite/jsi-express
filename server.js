@@ -23,6 +23,7 @@ var createApp = module.exports.app = function (options, client) {
   });
 
   app.get('/', function (req, res) {
+    console.log('achieving redirect');
     res.redirect('home/index.html');
   });
 
