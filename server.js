@@ -39,16 +39,26 @@ app.post('/api/people', function (req, res) {
     .done();
 });
 
-app.put(/^\/api\/people\/(\d+)$/, function (req, res) {
-  var id = req.params[0];
-  people[id] = {id: id, name: req.param('name')};
-  res.json({person: people[id]});
+app.put('/api/people/:id', function (req, res) {
+  People.where({id: req.params.id}).fetch().then(function(person) {
+    return person.save({firstName: req.param('firstName'),
+    lastName: req.param('lastName'), address: req.param('address')},
+    {patch: true});
+  }).then(function(person) {
+    res.json({updated: person.toJSON()});
+  })
+  .done();
 });
 
-app.delete(/^\/api\/people\/(\d+)$/, function (req, res) {
-  var id = req.params[0];
-  delete people[id];
-  res.json({people: _.values(people)});
+app.delete('/api/people/:id', function (req, res) {
+  var destroyedPerson;
+  People.where({id: req.params.id}).fetch().then(function(person) {
+    destroyedPerson = person.clone();
+    return person.destroy();
+  }).then(function() {
+    res.json({destroyed: destroyedPerson.toJSON()});
+  })
+  .done();
 });
 
 var server = app.listen(process.env.PORT || 3000, function() {
