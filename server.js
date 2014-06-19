@@ -16,8 +16,13 @@ var People = bookshelf.Model.extend({
   tableName: 'people'
 });
 
-var createObject = function() {
-
+var detectParameters = function (obj) {
+  var array = _.pairs(obj);
+  var returnObj = {};
+  array.forEach(function (parameterSet) {
+      returnObj[parameterSet[0]] = parameterSet[1];
+  });
+  return returnObj;
 };
 
 app.get('/api/people', function (req, res) {
@@ -46,9 +51,7 @@ app.post('/api/people', function (req, res) {
 app.put('/api/people/:id', function (req, res) {
   console.log(req.body);
   People.where({id: req.params.id}).fetch().then(function(person) {
-    return person.save({firstName: req.param('firstName'),
-    lastName: req.param('lastName'), address: req.param('address')},
-    {patch: true});
+    return person.save(detectParameters(req.body), {patch: true});
   }).then(function(person) {
     res.json({updated: person.toJSON()});
   })
