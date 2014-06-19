@@ -23,5 +23,6 @@
   "bugs": {
     "url": "https://github.com/dmitrydwhite/jsi-express/issues"
   },
-  "homepage": "https://github.com/dmitrydwhite/jsi-express"
+  "homepage": "https://github.com/dmitrydwhite/jsi-express",
+  "devDependencies": {}
 }
