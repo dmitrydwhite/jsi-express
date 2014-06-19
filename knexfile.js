@@ -4,7 +4,7 @@ module.exports = {
 
   development: {
     client: 'postgres',
-    connection: DATABASE_URL
+    connection: process.env.DATABASE_URL
   },
 
   staging: {
