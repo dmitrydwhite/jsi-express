@@ -16,6 +16,10 @@ var People = bookshelf.Model.extend({
   tableName: 'people'
 });
 
+var createObject = function() {
+
+};
+
 app.get('/api/people', function (req, res) {
   People.fetchAll().then(function(result) {
     res.json({people: result.toJSON()});
@@ -40,6 +44,7 @@ app.post('/api/people', function (req, res) {
 });
 
 app.put('/api/people/:id', function (req, res) {
+  console.log(req.body);
   People.where({id: req.params.id}).fetch().then(function(person) {
     return person.save({firstName: req.param('firstName'),
     lastName: req.param('lastName'), address: req.param('address')},
