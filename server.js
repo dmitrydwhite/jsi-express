@@ -1,65 +1,99 @@
 var express = require('express');
-var app = express();
+
 var _ = require('lodash');
 
 var env = process.NODE_ENV || 'development';
 var knexConfig = require('./knexfile.js')[env];
 var knex = require('knex')(knexConfig);
 var bookshelf = require('bookshelf')(knex);
+var bluebird = require('bluebird'), Promise = bluebird;
+var pg = bluebird.promisifyAll(require('pg'));
 
-app.use(require('morgan')('dev'));
-app.use(require('body-parser')());
-app.use(require('method-override')());
-app.use(express.static(__dirname + '/public'));
 
-var People = bookshelf.Model.extend({
-  tableName: 'people'
-});
 
-app.get('/api/people', function (req, res) {
-  People.fetchAll().then(function(result) {
-    res.json({people: result.toJSON()});
-  })
-  .done();
-});
+var createApp = module.exports.app = function (options, client) {
+  var app = express();
+  app.use(require('morgan')('dev'));
+  app.use(require('body-parser')());
+  app.use(require('method-override')());
+  app.use(express.static(__dirname + '/public'));
 
-app.get('/api/people/:id', function (req, res) {
-  People.where({id: req.params.id}).fetchAll().then(function(result) {
-    res.json({person: result.toJSON()});
-  })
-  .done();
-});
+  var People = bookshelf.Model.extend({
+    tableName: 'people'
+  });
 
-app.post('/api/people', function (req, res) {
-  People.forge({firstName: req.param('firstName'),
-    lastName: req.param('lastName'), address: req.param('address')})
-    .save().then(function(result) {
-      res.json({created: result.toJSON()})
+  app.get('/', function (req, res) {
+    res.redirect('home/index.html');
+  });
+
+  app.get('/api/people', function (req, res) {
+    People.fetchAll().then(function(result) {
+      res.json({people: result.toJSON()});
     })
     .done();
-});
+  });
 
-app.put('/api/people/:id', function (req, res) {
-  console.log(req.body);
-  People.where({id: req.params.id}).fetch().then(function(person) {
-    return person.save(req.body);
-  }).then(function(person) {
-    res.json({updated: person.toJSON()});
+  app.get('/api/people/:id', function (req, res) {
+    People.where({id: req.params.id}).fetchAll().then(function(result) {
+      res.json({person: result.toJSON()});
+    })
+    .done();
+  });
+
+  app.post('/api/people', function (req, res) {
+    People.forge({firstName: req.param('firstName'),
+      lastName: req.param('lastName'), address: req.param('address')})
+      .save().then(function(result) {
+        res.json({created: result.toJSON()});
+      })
+      .done();
+  });
+
+  app.put('/api/people/:id', function (req, res) {
+    console.log(req.body);
+    People.where({id: req.params.id}).fetch().then(function(person) {
+      return person.save(req.body);
+    }).then(function(person) {
+      res.json({updated: person.toJSON()});
+    })
+    .done();
+  });
+
+  app.delete('/api/people/:id', function (req, res) {
+    var destroyedPerson;
+    People.where({id: req.params.id}).fetch().then(function(person) {
+      destroyedPerson = person.clone();
+      return person.destroy();
+    }).then(function() {
+      res.json({destroyed: destroyedPerson.toJSON()});
+    })
+    .done();
+  });
+  return app;
+};
+// var server = app.listen(process.env.PORT || 3000, function() {
+//   console.log('Listening on port %d', server.address().port);
+// });
+
+console.log('loading server resource');
+
+if (require.main === module) {
+  var settings = {
+    env: process.env.NODE_ENV || 'development',
+    port: process.env.PORT || 3000,
+    dbURL: process.env.DATABASE_URL ||
+      'postgres://localhost/jsi_express'
+  };
+
+  pg.connectAsync(settings.dbURL).spread(function(client, done) {
+    createApp(settings, bluebird.promisifyAll(client))
+    .listen(settings.port, function() {
+      console.log('Express server started on port %s', settings.port);
+    });
   })
-  .done();
-});
-
-app.delete('/api/people/:id', function (req, res) {
-  var destroyedPerson;
-  People.where({id: req.params.id}).fetch().then(function(person) {
-    destroyedPerson = person.clone();
-    return person.destroy();
-  }).then(function() {
-    res.json({destroyed: destroyedPerson.toJSON()});
-  })
-  .done();
-});
-
-var server = app.listen(process.env.PORT || 3000, function() {
-  console.log('Listening on port %d', server.address().port);
-});
+  .catch(function(e) {
+    console.log(e);
+    console.error('Could not connect to database: %s', settings.dbURL);
+    process.exit(1);
+  });
+}
