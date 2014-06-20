@@ -1,9 +1,6 @@
 var _ = require('lodash');
 var express = require('express');
 
-<<<<<<< HEAD
-var _ = require('lodash');
-
 var env = process.NODE_ENV || 'development';
 var knexConfig = require('./knexfile.js')[env];
 var knex = require('knex')(knexConfig);
@@ -26,7 +23,7 @@ var createApp = module.exports.app = function (options, client) {
 
   app.get('/', function (req, res) {
     console.log('achieving redirect');
-    res.redirect('home/index.html');
+    res.redirect('/home/');
   });
 
   app.get('/api/people', function (req, res) {
