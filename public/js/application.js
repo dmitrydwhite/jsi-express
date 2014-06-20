@@ -30,7 +30,7 @@ $(function() {
     var $this = $(this);
     var id = $this.data('id');
     var options = { method: 'POST' };
-    var url = '/api/people/' + id + '?_method=DELETE';
+    var url = '/api/people/' + id;
     var promise = $.ajax(url, options);
     promise.then(updatePeople, handleError);
     return false;
