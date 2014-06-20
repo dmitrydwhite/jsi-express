@@ -71,9 +71,9 @@ var createApp = module.exports.app = function (options, client) {
   });
   return app;
 };
-var server = app.listen(process.env.PORT || 3000, function() {
-  console.log('Listening on port %d', server.address().port);
-});
+// var server = app.listen(process.env.PORT || 3000, function() {
+//   console.log('Listening on port %d', server.address().port);
+// });
 
 console.log('loading server resource');
 
