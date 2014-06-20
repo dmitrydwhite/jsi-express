@@ -4,9 +4,10 @@ module.exports = {
 
   development: {
     client: 'postgres',
-    connection: {
-      database: 'jsi_express'
-    }
+    connection: process.env.DATABASE_URL
+    // {
+    //   database: 'jsi_express'
+    // }
   },
 
   staging: {
