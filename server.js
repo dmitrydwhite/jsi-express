@@ -1,5 +1,7 @@
+var _ = require('lodash');
 var express = require('express');
 
+<<<<<<< HEAD
 var _ = require('lodash');
 
 var env = process.NODE_ENV || 'development';
@@ -72,9 +74,9 @@ var createApp = module.exports.app = function (options, client) {
   });
   return app;
 };
-// var server = app.listen(process.env.PORT || 3000, function() {
-//   console.log('Listening on port %d', server.address().port);
-// });
+var server = app.listen(process.env.PORT || 3000, function() {
+  console.log('Listening on port %d', server.address().port);
+});
 
 console.log('loading server resource');
 
@@ -98,3 +100,4 @@ if (require.main === module) {
     process.exit(1);
   });
 }
+
