@@ -41,7 +41,7 @@ var createApp = module.exports.app = function (options, client) {
   });
 
   app.post('/api/people', function (req, res) {
-    People.forge(_.pick(req.body, 'firstName'))
+    People.forge({firstName: req.body('firstName')})
       .save().then(function(result) {
         res.json({created: result.toJSON()});
       })

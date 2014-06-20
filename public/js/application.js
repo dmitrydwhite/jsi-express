@@ -19,8 +19,8 @@ $(function() {
   };
 
   $('#add-person').click(function (event) {
-    var data = { firstName: $('#add-person-name').val() };
-    var options = { method: 'POST', data: data };
+    var body = { firstName: $('#add-person-name').val() };
+    var options = { method: 'POST', body: data };
     var promise = $.ajax('/api/people', options);
     promise.then(updatePeople, handleError);
     return false;
