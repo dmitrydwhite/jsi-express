@@ -13,13 +13,13 @@ $(function() {
   };
 
   var updatePeople = function() {
-    $.ajax('/api/people', { method: 'GET' }).then(function(data) {
+    $.ajax('/api/people', { method: 'GET' }).then(function (data) {
       $('#people').html(templates.people(data));
     }, handleError);
   };
 
-  $('#add-person').click(function(event) {
-    var data = { name: $('#add-person-name').val() };
+  $('#add-person').click(function (event) {
+    var data = { firstName: $('#add-person-name').val() };
     var options = { method: 'POST', data: data };
     var promise = $.ajax('/api/people', options);
     promise.then(updatePeople, handleError);
