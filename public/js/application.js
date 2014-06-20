@@ -20,7 +20,7 @@ $(function() {
 
   $('#add-person').click(function (event) {
     var body = { firstName: $('#add-person-name').val() };
-    var options = { method: 'POST', body: data };
+    var options = { method: 'POST', body: body };
     var promise = $.ajax('/api/people', options);
     promise.then(updatePeople, handleError);
     return false;
