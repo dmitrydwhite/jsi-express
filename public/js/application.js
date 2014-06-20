@@ -1,14 +1,11 @@
 $(function() {
   'use strict';
 
-  var env = process.NODE_ENV;
-
   var templates = {
     people: Handlebars.compile($("#people-template").html())
   };
 
-  console.log('start' + env);
-  console.log(process.NODE_ENV);
+  console.log('start');
 
   var handleError = function(e) {
     console.log(e);
