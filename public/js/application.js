@@ -19,8 +19,10 @@ $(function() {
   };
 
   $('#add-person').click(function (event) {
-    var body = { firstName: $('#add-person-name').val() };
-    var options = { method: 'POST', body: body };
+    var inputs = $('#add-person-name').val().split(' ');
+    console.log(inputs);
+    var data = { firstName: inputs[0], lastName: inputs[1], address: inputs[2] };
+    var options = { method: 'POST', data: data };
     var promise = $.ajax('/api/people', options);
     promise.then(updatePeople, handleError);
     return false;
@@ -29,6 +31,7 @@ $(function() {
   $(document).on('click', '.person-delete', function() {
     var $this = $(this);
     var id = $this.data('id');
+    console.log(id);
     var options = { method: 'DELETE' };
     var url = '/api/people/' + id;
     var promise = $.ajax(url, options);

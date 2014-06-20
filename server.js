@@ -41,7 +41,7 @@ var createApp = module.exports.app = function (options, client) {
   });
 
   app.post('/api/people', function (req, res) {
-    People.forge({firstName: req.body('firstName')})
+    People.forge(req.body)
       .save().then(function(result) {
         res.json({created: result.toJSON()});
       })
@@ -49,6 +49,7 @@ var createApp = module.exports.app = function (options, client) {
   });
 
   app.put('/api/people/:id', function (req, res) {
+    console.log('attempting to delete');
     console.log(req.body);
     People.where({id: req.params.id}).fetch().then(function(person) {
       return person.save(req.body);

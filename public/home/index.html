@@ -47,7 +47,9 @@
     <table>
     {{#each people}}
       <tr>
-        <td>{{#if name }}{{ fistName }}{{else}}No Name{{/if}}</td>
+        <td>{{#if firstName }}{{ firstName }}{{else}}No Name{{/if}}</td>
+        <td>{{#if lastName }}{{ lastName }}{{else}}No Name{{/if}}</td>
+        <td>{{#if address }}{{ address }}{{else}}No Address{{/if}}</td>
         <td><a href="#" class="person-delete" data-id="{{ id }}">Delete</a></td>
       </tr>
     {{/each}}
