@@ -29,7 +29,7 @@ $(function() {
   $(document).on('click', '.person-delete', function() {
     var $this = $(this);
     var id = $this.data('id');
-    var options = { method: 'POST' };
+    var options = { method: 'DELETE' };
     var url = '/api/people/' + id;
     var promise = $.ajax(url, options);
     promise.then(updatePeople, handleError);
